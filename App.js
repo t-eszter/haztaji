@@ -6,16 +6,17 @@ import { supabase } from './supabase/supabase';
 
 import 'react-native-gesture-handler';
 import React, { useEffect, useState,Component,useLayoutEffect }  from 'react';
-
+import {View, SafeAreaView} from 'react-native';
 
 import { useFonts, AmaticSC_400Regular } from '@expo-google-fonts/amatic-sc';
 import * as Font from 'expo-font';
 
 import { NavigationContainer } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import AddNewPlace from './screens/AddNewPlace';
-// import HomeScreen from './screens/HomeScreen';
+import HomeScreen from './screens/HomeScreen';
 
 
 const Drawer = createDrawerNavigator();
@@ -100,30 +101,30 @@ export default function App() {
   );
 }
 
-function HomeScreen(props) {
-  const navigation = useNavigation();
+// function HomeScreen() {
+//   const navigation = useNavigation();
 
-   useLayoutEffect(() => {
-        navigation.setOptions({
-            headerShown: false,
-        });
-    }, [navigation]);
+//    useLayoutEffect(() => {
+//         navigation.setOptions({
+//             headerShown: false,
+//         });
+//     }, [navigation]);
 
-  return (
-    <SafeAreaView className="flex-1 relative">
-        <View className="flex-1 relative">
-            <MapView 
-            className="flex-1 relative" />
-            <FloatButton navigation={navigation} />
-            <View className="flex-row absolute top-0 left-0 px-6 mt-8 items-center space-x-2">
-                <View className="flex-auto justify-center items-center">
-                <Image style={{width:75, height:40}} source={require('./assets/haztaji-text-logo.png')} />
-                </View>
-            </View>
-        </View>
-    </SafeAreaView>
-  );
-}
+//   return (
+//     <SafeAreaView className="flex-1 relative">
+//         <View className="flex-1 relative">
+//             <MapView 
+//             className="flex-1 relative" />
+//             <FloatButton navigation={navigation} />
+//             <View className="flex-row absolute top-0 left-0 px-6 mt-8 items-center space-x-2">
+//                 <View className="flex-auto justify-center items-center">
+//                 <Image style={{width:75, height:40}} source={require('./assets/haztaji-text-logo.png')} />
+//                 </View>
+//             </View>
+//         </View>
+//     </SafeAreaView>
+//   );
+// }
 
 // const styles = StyleSheet.create({
 //   container: {
