@@ -9,6 +9,14 @@ const GOOGLE_MAPS_APIKEY = 'AIzaSyAMYOVdm8qq57T__1zDWw0CQ8xeEbx6QdM';
 // Geolocation.getCurrentPosition(info => console.log(info));
 
 export default function FarmMap() {
+    const navigation = useNavigation();
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: 'Travel',
+            headerShown: false,
+        });
+    }, []);
+
     const [userLocation, setUserLocation] = useState(null);
     const [farms, setFarms] = useState([]);
     // let ScreenHeight = Dimensions.get("window").height;
