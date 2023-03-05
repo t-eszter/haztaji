@@ -7,7 +7,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/farmer-1.1s-200px.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
