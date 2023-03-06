@@ -4,12 +4,16 @@ import { useNavigation } from '@react-navigation/native';
 import MapView, { Marker, PROVIDER_GOOGLE  } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+// import SelectDropdown from 'react-native-select-dropdown';
+
+// const products = ["Eggs", "Honey", "Tomato", "Pepper", "Apples","Strawberry","Melon","Chicken","Mushroom"];
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyAMYOVdm8qq57T__1zDWw0CQ8xeEbx6QdM';
 // Geolocation.getCurrentPosition(info => console.log(info));
 
-export default function FarmMap() {
-    const navigation = useNavigation();
+export default function FarmMap({ navigation, supabase }) {
+  console.log(supabase); 
+    // const navigation = useNavigation();
     useLayoutEffect(() => {
         navigation.setOptions({
             title: 'Travel',
@@ -47,9 +51,24 @@ export default function FarmMap() {
       }, []);
       
 
+      // const [places, setPlaces] = useState([])
+
+      // useEffect(() => {
+      //   async function fetchPlaces() {
+      //     const { data, error } = await supabase
+      //     .from('places').select('latitude, longitude')
+      //     if (error) {
+      //       console.error(error)
+      //     } else {
+      //       setPlaces(data)
+      //     }
+      //   }
+      //   fetchPlaces()
+      // }, [])
+    
+
   return (
     <View style={styles.container}>
-        {/* <TextInput placeholder='Address' value={address}></TextInput> */}
         <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.map}
@@ -58,8 +77,7 @@ export default function FarmMap() {
                 longitude: userLocation?.longitude || 19.945015695800024,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
-            }}
-            >
+            }}>
             {farms.map(farm => (
                 <Marker
                 key={farm.place_id}
@@ -72,7 +90,6 @@ export default function FarmMap() {
                 />
             ))}
         </MapView>
-
     </View>
   );
 }
@@ -84,22 +101,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'red',
+    height: '100%',
+    width: '100%',
   },
   map: {
     backgroundColor: 'blue',
     height: '100%',
     width: '100%',
-    ...Platform.select({
-      ios: {
-        marginTop: 20,
-      },
-      android: {
-        marginTop: 24,
-      },
-      web: {
-        marginTop: 24,
-      },
-    }),
+    // ...Platform.select({
+    //   ios: {
+    //     marginTop: 20,
+    //   },
+    //   android: {
+    //     marginTop: 24,
+    //   },
+    //   web: {
+    //     marginTop: 24,
+    //   },
+    // }),
   },
 });
 ``

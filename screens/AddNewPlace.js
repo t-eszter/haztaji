@@ -5,30 +5,76 @@ import { useNavigation } from '@react-navigation/native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { supabase } from '../supabase/supabase';
 
-
 export default function AddNewPlace() {
 
-  const[place_name, setPlaceName] = useState('');
-  const[place_address, setPlaceAddress] = useState('');
-  const[opening_hours, setOpeningHours] = useState('');
-  const[phone_number, setPhoneNumber] = useState('');
-  const[products, setProducts] = useState('');
+  // const[place_name, setPlaceName] = useState('');
+  // const[place_address, setPlaceAddress] = useState('');
+  // const[opening_hours, setOpeningHours] = useState('');
+  // const[phone_number, setPhoneNumber] = useState('');
+  // const[products, setProducts] = useState('');
 
-  const addNewPlace = async (place_name, place_address,opening_hours,phone_number,value) => {
-    const {data: places, error } = await supabase
-      .from('places')
-      .insert([
-        {place_name: place_name},
-        {place_address: place_address},
-        {opening_hours: opening_hours},
-        {phone_number: phone_number},
-        {products: value }
-    ])
+  // const addNewPlace = async (place_name, place_address,opening_hours,phone_number,value) => {
+  //   const {data: places, error } = await supabase
+  //     .from('places')
+  //     .insert([
+  //       {place_name: place_name},
+  //       {place_address: place_address},
+  //       {opening_hours: opening_hours},
+  //       {phone_number: phone_number},
+  //       {products: value }
+  //   ])
   
-    Alert.alert('New Place Added');
-    navigation.navigate('FarmMap');
-    return places;
-  }
+  //   Alert.alert('New Place Added');
+  //   navigation.navigate('Home');
+  //   return places;
+  // }
+
+  const [formData, setFormData] = useState({
+    place_name: '',
+    opening_hours: '',
+    phone_number: '',
+    products: '',
+  });
+
+  const [placeData, setPlaceData] = useState({});
+
+  const handlePlaceSelect = (data, details) => {
+    const { name, formatted_address } = data.description;
+    const { lat, lng } = details.geometry.location;
+
+    console.log(data, details);
+    console.log(data.description)
+
+    setPlaceData({ name, address: formatted_address, lat, lng });
+  };
+
+
+  const handleInputChange = (name, value) => {
+    setFormData({...formData, [name]: value});
+  };
+  
+  const addNewPlace = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('places')
+        .insert([{ 
+          place_name: formData.place_name,
+          place_address: placeData.name,
+          longitude: placeData.lat,
+          latitude: placeData.lng,
+          opening_hours: formData.opening_hours,
+          phone_number: formData.phone_number,
+          products: value,
+        }]);
+      if (error) throw error;
+      console.log('Form submitted successfully:', data);
+      Alert.alert('New Place Added');
+      navigation.navigate('Home');
+    } catch (error) {
+      Alert.alert('Please fill in all the fields');
+      console.log('Error submitting form:', error.message);
+    }
+  };
 
 const navigation = useNavigation();
   useLayoutEffect(() => {
@@ -62,9 +108,12 @@ const navigation = useNavigation();
 
     return (
       <SafeAreaView className="flex-1 flex flex-column justify-top items-left bg-white">
-        <View className="items-center mt-3 mb-0"><Text className="font-amatic ml-3 mt-3 text-5xl">Add new place</Text></View>
+        <View className="flex flex-row items-center mt-3 mb-0">
+            <Text className="w-4/5 justify-center text-center font-amatic ml-8 pl-6 mt-3 text-5xl">Add new place</Text>
+            <TouchableOpacity className="w-1/5" onPress={() => navigation.navigate('Home')}><Text className="mt-2 text-3xl">X</Text></TouchableOpacity>
+        </View>
         <Text  className="font-amatic ml-3 mt-0 text-2xl border-solid border-2 border-black-500">Name of the place:</Text>
-        <TextInput value={place_name} onChangeText={setPlaceName} variant="outlined" label="name"
+        <TextInput value={formData.place_name} onChangeText={(text) => handleInputChange('place_name', text)} variant="outlined" label="name"
         className="p-3 pb-2 mx-3 text-left text-3xl rounded-lg border-solid border-2 border-black-500 font-amatic"
         placeholder="Name of the place..."/>
 
@@ -73,16 +122,18 @@ const navigation = useNavigation();
         className="p-3 pb-2 mx-3 text-left text-3xl rounded-lg border-solid border-2 border-black-500 font-amatic"
         placeholder="Address..."/> */}
         <View className="z-50 pb-6 mb-6 mx-3 text-left text-3xl rounded-lg border-solid border-2 border-black-500 font-amatic bg-red-700">
-            <GooglePlacesAutocomplete onChangeText={setPlaceAddress} className="mx-3 font-amatic z-50 absolute bottom-0 left-0 "
+            <GooglePlacesAutocomplete onChangeText={(text) => handlePlaceSelect(value, text)} className="mx-3 font-amatic z-50 absolute bottom-0 left-0 "
                 GooglePlacesDetailsQuery={{fields:"geometry"}}
+                onPress={handlePlaceSelect}
                 placeholder='Type address...'
                 fetchDetails={true}
-                value={place_address}
-                onPress={(data, details = null) => {
-                    // 'details' is provided when fetchDetails = true
-                    // console.log(data, details);
-                    // console.log(details?.geometry?.viewport);
-                }}
+                value={value}
+                // onPress={(data, details = null) => {
+                //     // 'details' is provided when fetchDetails = true
+                //     // console.log(data, details);
+                //     // console.log(details?.geometry?.viewport);
+                //     // handlePlaceSelect
+                // }}
                 query={{
                     key: 'AIzaSyAMYOVdm8qq57T__1zDWw0CQ8xeEbx6QdM',
                     language: 'en',
@@ -91,17 +142,17 @@ const navigation = useNavigation();
         </View>
 
         <Text className="font-amatic ml-3 mt-2 text-2xl border-solid border-2 border-black-500">Phone number:</Text>
-        <TextInput value={phone_number} onChangeText={setPhoneNumber} variant="outlined" label="phone"  
+        <TextInput value={formData.phone_number} onChangeText={(text) => handleInputChange('phone_number', text)} variant="outlined" label="phone"  
         className="p-3 pb-2 mx-3 text-left text-3xl rounded-lg border-solid border-2 border-black-500 font-amatic"
         placeholder="Phone number..."/>
 
         <Text className="font-amatic ml-3 mt-2 text-2xl border-solid border-2 border-black-500">Opening hours:</Text>
-        <TextInput value={opening_hours} onChangeText={setOpeningHours} variant="outlined" label="open"
+        <TextInput value={formData.opening_hours} onChangeText={(text) => handleInputChange('opening_hours', text)} variant="outlined" label="open"
         className="p-3 pb-2 mx-3 text-left text-3xl rounded-lg border-solid border-2 border-black-500 font-amatic"
         placeholder="Opening hours..."/>
 
         <Text className="font-amatic ml-3 mt-2 text-2xl border-solid border-2 border-black-500">What do they sell:</Text>
-        <DropDownPicker onChangeText={setProducts} className="p-3 pb-2 mx-3 text-left text-3xl rounded-lg border-solid border-2 border-black-500 font-amatic"
+        <DropDownPicker onChangeText={(text) => handleInputChange('products', text)} className="p-3 pb-2 mx-3 text-left text-3xl rounded-lg border-solid border-2 border-black-500 font-amatic"
           open={open}
           value={value}
           items={items}
