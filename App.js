@@ -39,22 +39,14 @@ class FloatButton extends Component {
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
   const [items, setItems] = useState([]);
-
-  const getItems = async () => {
-    let {data: Items, error } = await supabase
-        .from('places')
-        .select('*')
-    console.log(places)
-    return places;
-  }
   
-    useEffect(() => {
-        getItems()
-        .then((places) => {
-            console.log(places);
-            setItems(places);
-        })
-    }, []);
+    // useEffect(() => {
+    //     getItems()
+    //     .then((places) => {
+    //         console.log(places);
+    //         setItems(places);
+    //     })
+    // }, []);
 
     useEffect(() => {
         async function prepare() {
@@ -72,8 +64,6 @@ export default function App() {
             setAppIsReady(true);
         }
         }
-
-        
 
     prepare();
   }, []);

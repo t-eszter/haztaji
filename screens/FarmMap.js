@@ -4,11 +4,13 @@ import { useNavigation } from '@react-navigation/native';
 import MapView, { Marker, PROVIDER_GOOGLE  } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-
 const GOOGLE_MAPS_APIKEY = 'AIzaSyAMYOVdm8qq57T__1zDWw0CQ8xeEbx6QdM';
-// Geolocation.getCurrentPosition(info => console.log(info));
 
-export default function FarmMap() {
+export default function FarmMap({places}) {
+  const longitude = places.map(place => place.longitude);
+  console.log(longitude);
+
+
     const navigation = useNavigation();
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -16,12 +18,8 @@ export default function FarmMap() {
             headerShown: false,
         });
     }, []);
-
     const [userLocation, setUserLocation] = useState(null);
     const [farms, setFarms] = useState([]);
-    // let ScreenHeight = Dimensions.get("window").height;
-    // let ScreenWidth = Dimensions.get("window").width;
-
     const getUserLocationAndFetchFarms = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
@@ -41,16 +39,14 @@ export default function FarmMap() {
           .then(data => setFarms(data.results))
           .catch(error => console.log(error));
     };
-
     useEffect(() => {
         getUserLocationAndFetchFarms();
       }, []);
       
-
   return (
     <View style={styles.container}>
-        {/* <TextInput placeholder='Address' value={address}></TextInput> */}
         <MapView
+            key={`map-${places.length}`}
             provider={PROVIDER_GOOGLE}
             style={styles.map}
             region={{
@@ -71,12 +67,20 @@ export default function FarmMap() {
                 description={farm.vicinity}
                 />
             ))}
+            {places.map(place => (
+            <Marker
+              key={place.id}
+              coordinate={{
+                latitude: place.latitude || 46.62770931628499,
+                longitude: place.longitude || 19.945015695800024,
+              }}
+              title={place.place_name}
+            />
+          ))}
         </MapView>
-
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -89,17 +93,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
     height: '100%',
     width: '100%',
-    ...Platform.select({
-      ios: {
-        marginTop: 20,
-      },
-      android: {
-        marginTop: 24,
-      },
-      web: {
-        marginTop: 24,
-      },
-    }),
-  },
+    }
 });
-``

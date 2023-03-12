@@ -7,28 +7,6 @@ import { supabase } from '../supabase/supabase';
 
 export default function AddNewPlace() {
 
-  // const[place_name, setPlaceName] = useState('');
-  // const[place_address, setPlaceAddress] = useState('');
-  // const[opening_hours, setOpeningHours] = useState('');
-  // const[phone_number, setPhoneNumber] = useState('');
-  // const[products, setProducts] = useState('');
-
-  // const addNewPlace = async (place_name, place_address,opening_hours,phone_number,value) => {
-  //   const {data: places, error } = await supabase
-  //     .from('places')
-  //     .insert([
-  //       {place_name: place_name},
-  //       {place_address: place_address},
-  //       {opening_hours: opening_hours},
-  //       {phone_number: phone_number},
-  //       {products: value }
-  //   ])
-  
-  //   Alert.alert('New Place Added');
-  //   navigation.navigate('Home');
-  //   return places;
-  // }
-
   const [formData, setFormData] = useState({
     place_name: '',
     opening_hours: '',
@@ -118,9 +96,7 @@ const navigation = useNavigation();
         placeholder="Name of the place..."/>
 
         <Text className="font-amatic ml-3 mt-2 text-2xl border-solid border-2 border-black-500">Address:</Text>
-        {/* <TextInput variant="outlined" label="address"
-        className="p-3 pb-2 mx-3 text-left text-3xl rounded-lg border-solid border-2 border-black-500 font-amatic"
-        placeholder="Address..."/> */}
+
         <View className="z-50 pb-6 mb-6 mx-3 text-left text-3xl rounded-lg border-solid border-2 border-black-500 font-amatic bg-red-700">
             <GooglePlacesAutocomplete onChangeText={(text) => handlePlaceSelect(value, text)} className="mx-3 font-amatic z-50 absolute bottom-0 left-0 "
                 GooglePlacesDetailsQuery={{fields:"geometry"}}
@@ -128,12 +104,6 @@ const navigation = useNavigation();
                 placeholder='Type address...'
                 fetchDetails={true}
                 value={value}
-                // onPress={(data, details = null) => {
-                //     // 'details' is provided when fetchDetails = true
-                //     // console.log(data, details);
-                //     // console.log(details?.geometry?.viewport);
-                //     // handlePlaceSelect
-                // }}
                 query={{
                     key: 'AIzaSyAMYOVdm8qq57T__1zDWw0CQ8xeEbx6QdM',
                     language: 'en',

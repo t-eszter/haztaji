@@ -1,17 +1,36 @@
 import 'react-native-gesture-handler';
 import { View, SafeAreaView, Image, StyleSheet } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react'
 import SelectDropdown from 'react-native-select-dropdown';
 import MapView from 'react-native-maps';
 import FloatButton from './FloatButton';
 import FarmMap from './FarmMap';
+import { supabase } from '../supabase/supabase';
 
 const products = ["Eggs", "Honey", "Tomato", "Pepper", "Apples","Strawberry","Melon","Chicken","Mushroom"];
 
 export default function HomeScreen({ navigation }) {
+  const [places, setPlaces] = useState([]);
+
+  // const getItems = async () => {
+  //   let {data: Items, error } = await supabase
+  //       .from('places')
+  //       .select('*')
+  //   console.log(places)
+  //   return places;
+  // }
+
+  useEffect(() => {
+    supabase
+      .from('places')
+      .select('*')
+      .then(({ data }) => setPlaces(data))
+      .catch(error => console.log(error));
+  }, []);
+
   return (
     <SafeAreaView className="flex-1 relative">
-        <FarmMap/>
+       <FarmMap places={places} />
         <FloatButton navigation={navigation} />
         <View className="flex-row absolute top-0 left-0 px-6 mt-8 items-center space-x-2">
             <View className="flex-auto justify-center items-center">
